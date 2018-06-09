@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seckill.mapper.SeckillGoodsEntityMapper">
+	<resultMap id="BaseResultMap" type="com.seckill.entity.SeckillGoodsEntity">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="goods_id" jdbcType="BIGINT" property="goods_id" />
+		<result column="seckill_price" jdbcType="DECIMAL" property="seckill_price" />
+		<result column="stock_count" jdbcType="INTEGER" property="stock_count" />
+		<result column="start_time" jdbcType="TIMESTAMP" property="start_time" />
+		<result column="end_time" jdbcType="TIMESTAMP" property="end_time" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, goods_id, seckill_price, stock_count, start_time, end_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from seckill_goods
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from seckill_goods
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.seckill.entity.SeckillGoodsEntity">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into seckill_goods (goods_id, seckill_price, stock_count,
+		start_time, end_time)
+		values (#{goods_id,jdbcType=BIGINT}, #{seckill_price,jdbcType=DECIMAL},
+		#{stock_count,jdbcType=INTEGER},
+		#{start_time,jdbcType=TIMESTAMP}, #{end_time,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.seckill.entity.SeckillGoodsEntity">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into seckill_goods
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null">
+				goods_id,
+			</if>
+			<if test="seckill_price != null">
+				seckill_price,
+			</if>
+			<if test="stock_count != null">
+				stock_count,
+			</if>
+			<if test="start_time != null">
+				start_time,
+			</if>
+			<if test="end_time != null">
+				end_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null">
+				#{goods_id,jdbcType=BIGINT},
+			</if>
+			<if test="seckill_price != null">
+				#{seckill_price,jdbcType=DECIMAL},
+			</if>
+			<if test="stock_count != null">
+				#{stock_count,jdbcType=INTEGER},
+			</if>
+			<if test="start_time != null">
+				#{start_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="end_time != null">
+				#{end_time,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.seckill.entity.SeckillGoodsEntity">
+		update seckill_goods
+		<set>
+			<if test="goods_id != null">
+				goods_id = #{goods_id,jdbcType=BIGINT},
+			</if>
+			<if test="seckill_price != null">
+				seckill_price = #{seckill_price,jdbcType=DECIMAL},
+			</if>
+			<if test="stock_count != null">
+				stock_count = #{stock_count,jdbcType=INTEGER},
+			</if>
+			<if test="start_time != null">
+				start_time = #{start_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="end_time != null">
+				end_time = #{end_time,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.seckill.entity.SeckillGoodsEntity">
+		update seckill_goods
+		set goods_id = #{goods_id,jdbcType=BIGINT},
+		seckill_price = #{seckill_price,jdbcType=DECIMAL},
+		stock_count = #{stock_count,jdbcType=INTEGER},
+		start_time = #{start_time,jdbcType=TIMESTAMP},
+		end_time = #{end_time,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectEnableGoods" resultType="com.seckill.entity.SeckillGoodsEntity">
+		SELECT
+		t1.id,
+		t1.goods_id,
+		t1.seckill_price,
+		t1.stock_count,
+		t2.goods_name,
+		t2.goods_price
+		FROM
+		seckill_goods t1
+		LEFT JOIN goods t2 ON
+		t1.goods_id = t2.id
+		WHERE
+		t1.id = #{seckill_goods_id}
+		AND t1.start_time <![CDATA[<=]]>
+		NOW()
+		AND t1.end_time >= NOW()
+		AND t1.stock_count > 0
+	</select>
+
+	<update id="updateSeckillGoodsStockCount">
+		UPDATE seckill_goods SET stock_count = stock_count - 1 WHERE id = #{seckill_goods_id}
+	</update>
+</mapper>
