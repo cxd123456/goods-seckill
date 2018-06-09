@@ -124,6 +124,7 @@
 	</select>
 
 	<update id="updateSeckillGoodsStockCount">
-		UPDATE seckill_goods SET stock_count = stock_count - 1 WHERE id = #{seckill_goods_id}
+		UPDATE IGNORE seckill_goods SET stock_count = stock_count - 1 
+		WHERE id = #{seckill_goods_id} AND stock_count > 0
 	</update>
 </mapper>

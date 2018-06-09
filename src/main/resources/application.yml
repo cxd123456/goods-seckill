@@ -1,6 +1,6 @@
 # server
 server: 
-  port: 80
+  port: 81
 
 # database数据源配置
 spring:

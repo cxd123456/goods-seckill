@@ -59,10 +59,12 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 		soe.setUser_id(user_id);
 		soe.setGoods_id(seckill_goods_id);
 		soe.setOrder_id(orderId);
-		seckillOrderEntityMapper.insertSelective(soe);
+		seckillOrderEntityMapper.insertSelective(soe); 
 		
 		// 减库存
-		seckillGoodsEntityMapper.updateSeckillGoodsStockCount(seckill_goods_id);
+		if (seckillGoodsEntityMapper.updateSeckillGoodsStockCount(seckill_goods_id) <= 0) {
+			throw new RuntimeException("抢购失败");
+		}
 		
 		return result.OK(null);
 	}

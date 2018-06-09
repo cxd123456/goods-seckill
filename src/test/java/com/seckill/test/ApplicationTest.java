@@ -11,6 +11,7 @@ import com.seckill.entity.GoodsEntity;
 import com.seckill.mapper.GoodsEntityMapper;
 import com.seckill.service.SeckillGoodsService;
 import com.seckill.util.RedisUtil;
+import com.seckill.util.ResultCode;
 import com.sun.tools.classfile.StackMapTable_attribute.same_frame;
 
 @SpringBootTest
@@ -32,18 +33,32 @@ public class ApplicationTest {
 //		System.out.println(JSONObject.toJSONString(
 //				seckillGoodsService.createGoodsOrder(13333333333L, 1L)));
 		
-		for (int i = 1; i < 20; i++) {
+		/**
+		 * 多线程，模拟100个用户，抢购20个商品
+		 */
+		
+		for (int i = 1; i <= 100; i++) {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					
+					long threadId = Thread.currentThread().getId();
+					if (!testCreateOrder(threadId)) {
+						System.out.println("==========threadId用户抢购失败==========");
+					} else {
+						System.err.println("==========threadId用户抢购成功==========");
+					}
 				}
-			});
+			}).start();
 		}
 	}
 	
-	public void testCreateOrder(Long user_id) {
-		seckillGoodsService.createGoodsOrder(13333333333L, 1L);
+	public Boolean testCreateOrder(Long user_id) {
+		ResultCode<String> resultCode = seckillGoodsService.createGoodsOrder(user_id, 1L);
+		if ("ok".equals(resultCode.getCode())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
