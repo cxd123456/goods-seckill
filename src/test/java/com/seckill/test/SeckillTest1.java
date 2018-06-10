@@ -8,11 +8,8 @@ import com.seckill.util.HttpUtil;
  */
 public class SeckillTest1 {
 	
-	
 	public static void main(String[] args) {
 
-		long startTime = System.currentTimeMillis();
-		
 		for (int i = 1; i <= 2000; i++) {
 			new Thread(new Runnable() {
 				@Override
@@ -21,9 +18,6 @@ public class SeckillTest1 {
 				}
 			}).start();
 		}
-		
-		System.err.println("=======================" + (System.currentTimeMillis() - startTime) + "==========================");
-
 	}
 
 	public static void seckill() {
