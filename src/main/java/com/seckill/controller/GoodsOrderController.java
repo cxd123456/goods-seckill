@@ -1,5 +1,8 @@
 package com.seckill.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,11 +16,19 @@ public class GoodsOrderController {
 	@Autowired
 	private SeckillGoodsService seckillGoodsService;
 	
-	@RequestMapping("testSeckill")
-	public ResultCode<String> testSeckill() {
+	@RequestMapping("seckill")
+	public ResultCode<String> seckill(Long user_id) {
+		return seckillGoodsService.createGoodsOrder(user_id, 1L);
+	}
+	
+	
+//	@RequestMapping("testSeckill")
+	public ResultCode<String> testSeckill() throws Exception {
 		ResultCode<String> result = new ResultCode<>();
 		
-		for (int i = 1; i <= 100; i++) {
+		long startTime = System.currentTimeMillis();
+		
+		for (int i = 1; i <= 1000; i++) {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -30,7 +41,10 @@ public class GoodsOrderController {
 				}
 			}).start();
 		}
-		return result.OK(null);
+		
+		System.out.println("****" + (System.currentTimeMillis() - startTime) + "*****");
+		
+		return result.OK((System.currentTimeMillis() - startTime) + "");
 	}
 	
 	public Boolean testCreateOrder(Long user_id) {
