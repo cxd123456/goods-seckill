@@ -127,4 +127,13 @@
 		UPDATE IGNORE seckill_goods SET stock_count = stock_count - 1 
 		WHERE id = #{seckill_goods_id} AND stock_count > 0
 	</update>
+	
+	<select id="selectGoodsForCreateOrder" resultType="com.seckill.entity.SeckillGoodsEntity">
+		SELECT
+			t1.id, t1.goods_id, t1.seckill_price, t2.goods_name
+		FROM
+			seckill_goods t1
+		LEFT JOIN goods t2 ON t1.goods_id = t2.id
+		WHERE t1.id = #{seckill_goods_id}
+	</select>
 </mapper>

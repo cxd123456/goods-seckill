@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.seckill.entity.GoodsEntity;
 import com.seckill.mapper.GoodsEntityMapper;
 import com.seckill.service.SeckillGoodsService;
+import com.seckill.util.Constants;
 import com.seckill.util.RedisUtil;
 import com.seckill.util.ResultCode;
 import com.sun.tools.classfile.StackMapTable_attribute.same_frame;
@@ -21,7 +22,8 @@ public class ApplicationTest {
 	
 	@Test
 	public void test() {
-		
+		String value = RedisUtil.getValue(Constants.STOCK_COUNT + 1);
+		System.out.println(value);
 	}
 	
 

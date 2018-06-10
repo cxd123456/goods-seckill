@@ -33,7 +33,7 @@ spring:
       pool:
        max-idle: 100
        min-idle: 1
-       max-active: 1000
+       max-active: 2000
        max-wait: -1
 # mybatis映射文件存放位置
 mybatis:

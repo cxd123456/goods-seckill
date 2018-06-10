@@ -18,4 +18,6 @@ public interface SeckillGoodsEntityMapper {
     SeckillGoodsEntity selectEnableGoods(Long seckill_goods_id);
     
     int updateSeckillGoodsStockCount(Long seckill_goods_id);
+    
+    SeckillGoodsEntity selectGoodsForCreateOrder(Long seckill_goods_id);
 }

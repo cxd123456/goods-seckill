@@ -73,6 +73,14 @@ public class RedisUtil {
 	public static boolean expireValueTime(String key, Long timeout) {
 		return redisTemplate.boundValueOps(key).expire(timeout, TimeUnit.MILLISECONDS);
 	}
+	
+	public static Long incr(String key) {
+		return redisTemplate.opsForValue().increment(key, 1);
+	}
+	
+	public static Long decr(String key) {
+		return redisTemplate.opsForValue().increment(key, -1);
+	}
 
 	// -----------------------------------------------------------------------
 
