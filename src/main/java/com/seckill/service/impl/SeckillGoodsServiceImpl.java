@@ -107,6 +107,11 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 		user_id = Long.valueOf(System.currentTimeMillis() + NumberUtil.sexNumber());
 		
 		// 1. redis预减库存
+		/*
+		 * redis decr是悲观锁，是单线程的
+		 * redis读写请求每秒几万，很适合处理并发
+		 * 利用这个特性，控制减库存，可以很快的处理高并发请求
+		 */
 		Long decr = RedisUtil.decr(Constants.STOCK_COUNT + seckill_goods_id);
 		if (decr <= 0) 
 			return result.ERROE("库存不足");
@@ -141,6 +146,12 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 		System.err.println("=========购买成功========");
 		
 		return result.OK(null);
+	}
+
+	@Override
+	public ResultCode<String> createGoodsOrder3(Long user_id, Long seckill_goods_id) {
+		
+		return null;
 	}
 	
 	

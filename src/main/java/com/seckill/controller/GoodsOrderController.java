@@ -38,10 +38,17 @@ public class GoodsOrderController {
 	 * @return
 	 */
 	@RequestMapping("seckill")
-	public ResultCode<String> seckill1(Long user_id) {
+	public ResultCode<String> seckill1() {
 		// 初级方案秒杀入口
-//		return seckillGoodsService.createGoodsOrder1(user_id, 1L);
-		return seckillGoodsService.createGoodsOrder2(user_id, 1L);
+//		ResultCode<String> result = seckillGoodsService.createGoodsOrder1(1L, 1L);
+		// 秒杀方案优化一
+		ResultCode<String> result = seckillGoodsService.createGoodsOrder2(1L, 1L);
+		if ("ok".equals(result.getCode())) {
+			System.err.println("============秒杀成功===============");
+		} else {
+			System.out.println("============秒杀失败===============");
+		}
+		return result;
 	}
 	
 }

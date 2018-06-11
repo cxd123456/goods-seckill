@@ -22,5 +22,11 @@ public interface SeckillGoodsService {
 	 */
 	ResultCode<String> createGoodsOrder2(Long user_id, Long seckill_goods_id);
 	
-	
+	/**
+	 * 优化方案二，使用redis和ActiveMQ队列
+	 * @param user_id
+	 * @param seckill_goods_id
+	 * @return
+	 */
+	ResultCode<String> createGoodsOrder3(Long user_id, Long seckill_goods_id);
 }
