@@ -15,6 +15,9 @@ public class GoodsOrderController {
 	@Autowired
 	private SeckillGoodsService seckillGoodsService;
 	
+//	@Autowired
+//	private GoodsSeckillProducer goodsSeckillProducer;
+	
 	@RequestMapping("setRedisStockCount")
 	public ResultCode<String> setRedisStockCount() {
 		
@@ -29,8 +32,9 @@ public class GoodsOrderController {
 	
 	@RequestMapping("test")
 	public ResultCode<String> test() {
-		String value = RedisUtil.getValue(Constants.STOCK_COUNT + 1);
-		return new ResultCode<String>().OK(value);
+//		String value = RedisUtil.getValue(Constants.STOCK_COUNT + 1);
+		
+		return new ResultCode<String>().OK(null);
 	}
 	
 	/**
@@ -42,7 +46,9 @@ public class GoodsOrderController {
 		// 初级方案秒杀入口
 //		ResultCode<String> result = seckillGoodsService.createGoodsOrder1(1L, 1L);
 		// 秒杀方案优化一
-		ResultCode<String> result = seckillGoodsService.createGoodsOrder2(1L, 1L);
+//		ResultCode<String> result = seckillGoodsService.createGoodsOrder2(1L, 1L);
+		// 秒杀方案优化二
+		ResultCode<String> result = seckillGoodsService.createGoodsOrder3(1L, 1L);
 		if ("ok".equals(result.getCode())) {
 			System.err.println("============秒杀成功===============");
 		} else {

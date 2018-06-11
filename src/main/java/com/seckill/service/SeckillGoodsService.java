@@ -29,4 +29,12 @@ public interface SeckillGoodsService {
 	 * @return
 	 */
 	ResultCode<String> createGoodsOrder3(Long user_id, Long seckill_goods_id);
+	/**
+	 * ActiveMQ队列消费者Consumer调用服务，为了方案二
+	 * @param user_id
+	 * @param seckill_goods_id
+	 * @return
+	 */
+	ResultCode<String> createGoodsOrder3ForConsumer(String message);
+	
 }
