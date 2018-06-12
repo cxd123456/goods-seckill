@@ -149,6 +149,10 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 		return result.OK(null);
 	}
 
+	// ========================================
+	// ===== 优化方案二，使用redis + activeMQ =====
+	// ========================================
+
 	@Override
 	public ResultCode<String> createGoodsOrder3(Long user_id, Long seckill_goods_id) {
 		ResultCode<String> result = new ResultCode<>();
@@ -204,7 +208,7 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 		soe.setGoods_id(seckill_goods_id);
 		soe.setOrder_id(orderInfoEntity.getId());
 		seckillOrderEntityMapper.insertSelective(soe);
-		return null;
+		return result.OK(null);
 	}
 
 }

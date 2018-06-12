@@ -2,7 +2,7 @@ package com.seckill.mq.message;
 
 import java.io.Serializable;
 /**
- * 商品秒杀消息携带
+ * 商品秒杀消息传递载体
  * @创建时间：2018年6月11日
  */
 public class GoodsSeckillMessage implements Serializable{
