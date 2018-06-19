@@ -1,0 +1,51 @@
+spring: 
+# thymeleaf
+  thymeleaf: 
+    cache: false
+    content-type: text/html
+    enabled: true
+    encoding: UTF-8
+    mode: HTML5
+    prefix: classpath:/templates/
+    suffix: .html
+    
+# datasource
+  datasource:
+    name: spring-boot-mybatis
+    url: jdbc:mysql://192.168.25.201:3306/miaosha
+    username: root
+    password: root9918
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+# redis, spring-boot集成redis有一种比较简单的方式, 参考https://github.com/HMDOBO/spring-boot/tree/master/spring-boot-cache-redis
+# 但是这里为了一致性, 采用了自己实现redisTemplate的方式, 而不用spring-redis-Template包
+redis:
+  host: 192.168.25.111
+  port: 6379
+  timeout: 3
+  password: 
+  poolMaxTotal: 10
+  poolMaxIdle: 10
+  poolMaxWait: 3
+
+# mybatis
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+
+
+
