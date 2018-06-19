@@ -10,6 +10,8 @@
 
 	<artifactId>seckill</artifactId>
 
+	<name>高并发高性能秒杀系统</name>
+
 	<properties>
 		<!-- common -->
 		<java.version>1.8</java.version>
