@@ -14,12 +14,14 @@ import com.miaosha.common.Result;
 public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
-	public Result<String> exceptionHandler() {
+	public Result<String> exceptionHandler(Exception e) {
+		e.printStackTrace();
 		return Result.error(CodeMsg.SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(BindException.class)
 	public Result<String> bindExceptionHandler(BindException e) {
+		e.printStackTrace();
 		List<ObjectError> allErrors = e.getAllErrors();
 		ObjectError objectError = allErrors.get(0);
 		String defaultMessage = objectError.getDefaultMessage();
@@ -28,6 +30,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(GlobalException.class)
 	public Result<String> globalExceptionHandler(GlobalException e) {
+		e.printStackTrace();
 		return Result.error(e.getCodeMsg());
 	}
 
