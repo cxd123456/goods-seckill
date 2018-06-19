@@ -23,24 +23,25 @@ public class GoodsController {
 
 	@RequestMapping("to_list")
 	public String toList(Model model, HttpServletResponse response,
-			@CookieValue(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String cookieToken,
-			@RequestParam(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String paramToken) {
+//			@CookieValue(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String cookieToken,
+//			@RequestParam(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String paramToken,
+			MiaoshaUserEntity miaoshaUserEntity) {
 
-		String token = null;
-
-		if (StringUtils.isEmpty(paramToken)) {
-			if (!StringUtils.isEmpty(cookieToken)) {
-				token = cookieToken;
-			}
-		} else {
-			token = paramToken;
-		}
-		
-		if (StringUtils.isEmpty(token)) {
-			return "/login";
-		}
-
-		MiaoshaUserEntity miaoshaUserEntity = miaoshaUserService.getByToken(token, response);
+//		String token = null;
+//
+//		if (StringUtils.isEmpty(paramToken)) {
+//			if (!StringUtils.isEmpty(cookieToken)) {
+//				token = cookieToken;
+//			}
+//		} else {
+//			token = paramToken;
+//		}
+//		
+//		if (StringUtils.isEmpty(token)) {
+//			return "/login";
+//		}
+//
+//		MiaoshaUserEntity miaoshaUserEntity = miaoshaUserService.getByToken(token, response);
 
 		if (miaoshaUserEntity == null) {
 			return "/login";
