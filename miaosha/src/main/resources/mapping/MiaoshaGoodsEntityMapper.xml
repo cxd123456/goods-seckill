@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miaosha.mapper.MiaoshaGoodsEntityMapper">
+  <resultMap id="BaseResultMap" type="com.miaosha.entity.MiaoshaGoodsEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="goods_id" jdbcType="BIGINT" property="goods_id" />
+    <result column="miaosha_price" jdbcType="DECIMAL" property="miaosha_price" />
+    <result column="stock_count" jdbcType="INTEGER" property="stock_count" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="start_time" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="end_time" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, goods_id, miaosha_price, stock_count, start_time, end_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from miaosha_goods
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from miaosha_goods
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.miaosha.entity.MiaoshaGoodsEntity">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into miaosha_goods (goods_id, miaosha_price, stock_count, 
+      start_time, end_time)
+    values (#{goods_id,jdbcType=BIGINT}, #{miaosha_price,jdbcType=DECIMAL}, #{stock_count,jdbcType=INTEGER}, 
+      #{start_time,jdbcType=TIMESTAMP}, #{end_time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.miaosha.entity.MiaoshaGoodsEntity">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into miaosha_goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="goods_id != null">
+        goods_id,
+      </if>
+      <if test="miaosha_price != null">
+        miaosha_price,
+      </if>
+      <if test="stock_count != null">
+        stock_count,
+      </if>
+      <if test="start_time != null">
+        start_time,
+      </if>
+      <if test="end_time != null">
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="goods_id != null">
+        #{goods_id,jdbcType=BIGINT},
+      </if>
+      <if test="miaosha_price != null">
+        #{miaosha_price,jdbcType=DECIMAL},
+      </if>
+      <if test="stock_count != null">
+        #{stock_count,jdbcType=INTEGER},
+      </if>
+      <if test="start_time != null">
+        #{start_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end_time != null">
+        #{end_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.miaosha.entity.MiaoshaGoodsEntity">
+    update miaosha_goods
+    <set>
+      <if test="goods_id != null">
+        goods_id = #{goods_id,jdbcType=BIGINT},
+      </if>
+      <if test="miaosha_price != null">
+        miaosha_price = #{miaosha_price,jdbcType=DECIMAL},
+      </if>
+      <if test="stock_count != null">
+        stock_count = #{stock_count,jdbcType=INTEGER},
+      </if>
+      <if test="start_time != null">
+        start_time = #{start_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end_time != null">
+        end_time = #{end_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.miaosha.entity.MiaoshaGoodsEntity">
+    update miaosha_goods
+    set goods_id = #{goods_id,jdbcType=BIGINT},
+      miaosha_price = #{miaosha_price,jdbcType=DECIMAL},
+      stock_count = #{stock_count,jdbcType=INTEGER},
+      start_time = #{start_time,jdbcType=TIMESTAMP},
+      end_time = #{end_time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

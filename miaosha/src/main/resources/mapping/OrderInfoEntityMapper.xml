@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miaosha.mapper.OrderInfoEntityMapper">
+  <resultMap id="BaseResultMap" type="com.miaosha.entity.OrderInfoEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="user_id" />
+    <result column="goods_id" jdbcType="BIGINT" property="goods_id" />
+    <result column="delivery_addr_id" jdbcType="BIGINT" property="delivery_addr_id" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goods_name" />
+    <result column="goods_count" jdbcType="INTEGER" property="goods_count" />
+    <result column="goods_price" jdbcType="DECIMAL" property="goods_price" />
+    <result column="order_channel" jdbcType="TINYINT" property="order_channel" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="crate_time" jdbcType="TIMESTAMP" property="crate_time" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="pay_time" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, goods_id, delivery_addr_id, goods_name, goods_count, goods_price, order_channel, 
+    status, crate_time, pay_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from order_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.miaosha.entity.OrderInfoEntity">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into order_info (user_id, goods_id, delivery_addr_id, 
+      goods_name, goods_count, goods_price, 
+      order_channel, status, crate_time, 
+      pay_time)
+    values (#{user_id,jdbcType=BIGINT}, #{goods_id,jdbcType=BIGINT}, #{delivery_addr_id,jdbcType=BIGINT}, 
+      #{goods_name,jdbcType=VARCHAR}, #{goods_count,jdbcType=INTEGER}, #{goods_price,jdbcType=DECIMAL}, 
+      #{order_channel,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{crate_time,jdbcType=TIMESTAMP}, 
+      #{pay_time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.miaosha.entity.OrderInfoEntity">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into order_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="user_id != null">
+        user_id,
+      </if>
+      <if test="goods_id != null">
+        goods_id,
+      </if>
+      <if test="delivery_addr_id != null">
+        delivery_addr_id,
+      </if>
+      <if test="goods_name != null">
+        goods_name,
+      </if>
+      <if test="goods_count != null">
+        goods_count,
+      </if>
+      <if test="goods_price != null">
+        goods_price,
+      </if>
+      <if test="order_channel != null">
+        order_channel,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="crate_time != null">
+        crate_time,
+      </if>
+      <if test="pay_time != null">
+        pay_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="user_id != null">
+        #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="goods_id != null">
+        #{goods_id,jdbcType=BIGINT},
+      </if>
+      <if test="delivery_addr_id != null">
+        #{delivery_addr_id,jdbcType=BIGINT},
+      </if>
+      <if test="goods_name != null">
+        #{goods_name,jdbcType=VARCHAR},
+      </if>
+      <if test="goods_count != null">
+        #{goods_count,jdbcType=INTEGER},
+      </if>
+      <if test="goods_price != null">
+        #{goods_price,jdbcType=DECIMAL},
+      </if>
+      <if test="order_channel != null">
+        #{order_channel,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="crate_time != null">
+        #{crate_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pay_time != null">
+        #{pay_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.miaosha.entity.OrderInfoEntity">
+    update order_info
+    <set>
+      <if test="user_id != null">
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="goods_id != null">
+        goods_id = #{goods_id,jdbcType=BIGINT},
+      </if>
+      <if test="delivery_addr_id != null">
+        delivery_addr_id = #{delivery_addr_id,jdbcType=BIGINT},
+      </if>
+      <if test="goods_name != null">
+        goods_name = #{goods_name,jdbcType=VARCHAR},
+      </if>
+      <if test="goods_count != null">
+        goods_count = #{goods_count,jdbcType=INTEGER},
+      </if>
+      <if test="goods_price != null">
+        goods_price = #{goods_price,jdbcType=DECIMAL},
+      </if>
+      <if test="order_channel != null">
+        order_channel = #{order_channel,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="crate_time != null">
+        crate_time = #{crate_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pay_time != null">
+        pay_time = #{pay_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.miaosha.entity.OrderInfoEntity">
+    update order_info
+    set user_id = #{user_id,jdbcType=BIGINT},
+      goods_id = #{goods_id,jdbcType=BIGINT},
+      delivery_addr_id = #{delivery_addr_id,jdbcType=BIGINT},
+      goods_name = #{goods_name,jdbcType=VARCHAR},
+      goods_count = #{goods_count,jdbcType=INTEGER},
+      goods_price = #{goods_price,jdbcType=DECIMAL},
+      order_channel = #{order_channel,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      crate_time = #{crate_time,jdbcType=TIMESTAMP},
+      pay_time = #{pay_time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
