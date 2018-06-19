@@ -3,12 +3,14 @@ package com.miaosha.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -63,5 +65,34 @@ public class GoodsController {
 
 		return "goods_list";
 	}
+	
+	@RequestMapping("to_detail/{goodsId}")
+	public String toDetail(Model model, @PathVariable(value = "goodsId") Long goodsId){
+		GoodsVo goods = goodsService.getGoodsById(goodsId);
+		
+		long startTime = goods.getStart_time().getTime();
+		long endTime = goods.getEnd_time().getTime();
+		long nowTime = System.currentTimeMillis();
+		
+		int miaoshaStatus = 0;
+		int remainSeconds = 0;
+		
+		if (startTime > nowTime) {	// 秒杀未开始
+			miaoshaStatus = 0;
+			remainSeconds = (int)((nowTime - startTime) / 1000);
+		} else if (nowTime > endTime) {	// 秒杀已结束
+			miaoshaStatus = 2;
+			remainSeconds = -1;
+		} else {	// 秒杀进行中
+			miaoshaStatus = 1;
+			remainSeconds = 0;
+		}
+		
+		model.addAttribute("goods", goods);
+		model.addAttribute("miaoshaStatus", miaoshaStatus);
+		model.addAttribute("remainSeconds", remainSeconds);
+		return "goods_detail";
+	}
+	
 
 }

@@ -19,6 +19,11 @@ public class GoodsServiceImpl implements GoodsService {
 	public List<GoodsVo> selectGoodsVoList() {
 		return goodsEntityMapper.selectGoodsVoList();
 	}
+
+	@Override
+	public GoodsVo getGoodsById(Long goodsId) {
+		return goodsEntityMapper.selectGoodsVoById(goodsId);
+	}
 	
 	
 

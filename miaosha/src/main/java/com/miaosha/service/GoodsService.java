@@ -7,5 +7,8 @@ import com.miaosha.vo.GoodsVo;
 public interface GoodsService {
 
 	List<GoodsVo> selectGoodsVoList();
+
+	GoodsVo getGoodsById(Long goodsId);
+
 	
 }

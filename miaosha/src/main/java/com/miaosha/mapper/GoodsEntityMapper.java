@@ -24,4 +24,6 @@ public interface GoodsEntityMapper {
     
     @Select("SELECT mg.miaosha_price, mg.stock_count, mg.start_time, mg.end_time, g.* FROM miaosha_goods mg LEFT JOIN goods g ON mg.goods_id = g.id")
     List<GoodsVo> selectGoodsVoList();
+    @Select("SELECT mg.miaosha_price, mg.stock_count, mg.start_time, mg.end_time, g.* FROM miaosha_goods mg LEFT JOIN goods g ON mg.goods_id = g.id WHERE g.id = #{goodsId}")
+    GoodsVo selectGoodsVoById(Long goodsId);
 }
