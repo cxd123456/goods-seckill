@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50635
 File Encoding         : 65001
 
-Date: 2018-06-19 22:59:56
+Date: 2018-06-20 14:39:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -53,8 +53,8 @@ CREATE TABLE `miaosha_goods` (
 -- ----------------------------
 -- Records of miaosha_goods
 -- ----------------------------
-INSERT INTO `miaosha_goods` VALUES ('1', '1', '0.01', '1', '2018-06-09 11:18:00', '2018-06-10 14:00:18');
-INSERT INTO `miaosha_goods` VALUES ('2', '2', '0.01', '5', '2018-06-09 14:00:00', '2018-06-10 14:00:18');
+INSERT INTO `miaosha_goods` VALUES ('1', '1', '0.01', '4', '2018-06-19 11:18:00', '2018-06-30 14:00:18');
+INSERT INTO `miaosha_goods` VALUES ('2', '2', '0.01', '5', '2018-06-19 14:00:00', '2018-06-30 14:00:18');
 
 -- ----------------------------
 -- Table structure for miaosha_order
@@ -66,11 +66,12 @@ CREATE TABLE `miaosha_order` (
   `goods_id` bigint(20) DEFAULT NULL COMMENT '商品ID',
   `order_id` bigint(20) DEFAULT NULL COMMENT '商品ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3877 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3881 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of miaosha_order
 -- ----------------------------
+INSERT INTO `miaosha_order` VALUES ('3880', '13333333333', '1', '3889');
 
 -- ----------------------------
 -- Table structure for miaosha_user
@@ -91,7 +92,7 @@ CREATE TABLE `miaosha_user` (
 -- ----------------------------
 -- Records of miaosha_user
 -- ----------------------------
-INSERT INTO `miaosha_user` VALUES ('13333333333', 'jerry', '123', '123456', null, '2018-06-20 06:55:37', '2018-06-20 06:55:37', '0');
+INSERT INTO `miaosha_user` VALUES ('13333333333', 'jerry', '689857bcee8c0acc59c15f686f661aba', '123456', null, '2018-06-10 22:42:56', '2018-06-10 22:42:56', '0');
 
 -- ----------------------------
 -- Table structure for order_info
@@ -110,8 +111,9 @@ CREATE TABLE `order_info` (
   `crate_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '订单的创建时间',
   `pay_time` datetime DEFAULT NULL COMMENT '支付时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3886 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3890 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of order_info
 -- ----------------------------
+INSERT INTO `order_info` VALUES ('3889', '13333333333', '1', '0', 'iPhone X', '1', '0.01', '1', '0', '2018-06-20 12:55:46', null);

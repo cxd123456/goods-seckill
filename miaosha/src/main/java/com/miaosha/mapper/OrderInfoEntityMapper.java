@@ -1,5 +1,9 @@
 package com.miaosha.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import com.miaosha.entity.MiaoshaOrderEntity;
 import com.miaosha.entity.OrderInfoEntity;
 
 public interface OrderInfoEntityMapper {
@@ -14,4 +18,7 @@ public interface OrderInfoEntityMapper {
     int updateByPrimaryKeySelective(OrderInfoEntity record);
 
     int updateByPrimaryKey(OrderInfoEntity record);
+
+    @Select("SELECT * FROM order_info WHERE user_id = #{userId} AND goods_id = #{goodsId}")
+	MiaoshaOrderEntity getMiaoshaOrderByUserIdGoodsId(@Param("userId") Long userId, @Param("goodsId") Long goodsId);
 }

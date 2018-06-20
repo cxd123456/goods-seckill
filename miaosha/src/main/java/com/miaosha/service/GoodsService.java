@@ -10,5 +10,7 @@ public interface GoodsService {
 
 	GoodsVo getGoodsById(Long goodsId);
 
+	void reduceStock(GoodsVo goodsVo);
+
 	
 }

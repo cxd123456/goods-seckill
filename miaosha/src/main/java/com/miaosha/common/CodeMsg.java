@@ -17,12 +17,12 @@ public class CodeMsg implements Serializable{
 	private int code;
 	private String msg;
 	
-	// 通用状态码
+	// 通用状态码	5001XX
 	public static final CodeMsg SUCCESS = new CodeMsg(0, "success");
 	public static final CodeMsg SERVER_ERROR = new CodeMsg(500100, "服务端异常");
 	public static final CodeMsg BIND_ERROR = new CodeMsg(500101, "参数校验异常: %s");
 	
-	// 登录模块
+	// 登录模块	5002XX
 	public static final CodeMsg SESSION_ERROR = new CodeMsg(500210, "session不存在或已失效");
 	public static final CodeMsg PASSWORD_EMPTY = new CodeMsg(500211, "密码不能为空");
 	public static final CodeMsg MOBILE_EMPTY = new CodeMsg(500212, "手机号不能为空");
@@ -30,11 +30,13 @@ public class CodeMsg implements Serializable{
 	public static final CodeMsg MOBILE_NOT_EXIST = new CodeMsg(500214, "手机号未注册");
 	public static final CodeMsg PASSWORD_ERROR = new CodeMsg(500215, "密码错误");
 	
-	// 订单模块
+	// 商品模块	5003XX
 	
-	// 秒杀模块
+	// 订单模块	5004XX
 	
-	// 商品模块
+	// 秒杀模块	5005XX
+	public static final CodeMsg MIAO_SHA_OVER = new CodeMsg(500500, "商品已经秒杀完毕");
+	public static final CodeMsg REPEATE_MIAOSHA = new CodeMsg(500501, "不能重复秒杀");
 	
 	public CodeMsg fillArgs(Object... args) {
 		this.msg = String.format(this.msg, args);

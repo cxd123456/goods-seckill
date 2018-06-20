@@ -15,6 +15,11 @@ import com.miaosha.common.Result;
 import com.miaosha.service.MiaoshaUserService;
 import com.miaosha.vo.LoginVo;
 
+/**
+ * 登录controller
+ * 
+ * @创建时间：2018年6月20日
+ */
 @Controller
 @RequestMapping("login")
 public class LoginController {
@@ -24,11 +29,21 @@ public class LoginController {
 	@Autowired
 	private MiaoshaUserService miaoshaUserService;
 	
+	/**
+	 * 跳转到登录页
+	 * @return
+	 */
 	@RequestMapping("toLogin")
 	public String toLogin() {
 		return "login";
 	}
 	
+	/**
+	 * 登录操作
+	 * @param loginVo
+	 * @param response
+	 * @return
+	 */
 	@PostMapping("do_login")
 	@ResponseBody
 	public Result<Boolean> doLogin(@Valid LoginVo loginVo, HttpServletResponse response) {
