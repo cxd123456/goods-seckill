@@ -1,3 +1,5 @@
+server: 
+  port: 8080
 spring: 
 # thymeleaf
   thymeleaf: 
@@ -31,17 +33,27 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
-
+# redis config
+  redis:
+    host: 192.168.25.111
+    port: 6379
+    password: 
+    timeout: 100000 ## 关键
+    pool:
+     max-idle: 500
+     min-idle: 50
+     max-active: 3000
+     max-wait: 100000
 # redis, spring-boot集成redis有一种比较简单的方式, 参考https://github.com/HMDOBO/spring-boot/tree/master/spring-boot-cache-redis
 # 但是这里为了一致性, 采用了自己实现redisTemplate的方式, 而不用spring-redis-Template包
-redis:
-  host: 192.168.25.111
-  port: 6379
-  timeout: 10
-  password: 
-  poolMaxTotal: 1000
-  poolMaxIdle: 500
-  poolMaxWait: 500
+#redis:
+#  host: 192.168.25.111
+#  port: 6379
+#  timeout: 10
+#  password: 
+#  poolMaxTotal: 1000
+#  poolMaxIdle: 500
+#  poolMaxWait: 500
 
 # mybatis
 mybatis:

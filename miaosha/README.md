@@ -2,6 +2,8 @@
 
 ### 压测工具使用jmeter
 
+jmeter使用前的配置，因为在做高并发测试时需要较多的物理内存，而jmeter默认分配的内存较少，参考：https://blog.csdn.net/gc_cg/article/details/78939611
+
 衡量网站并发承载能力：在具体的并发请求下，网站的QPS是多少
 
 jmeter测试服务某个接口吞吐量

@@ -1,5 +1,7 @@
 package com.miaosha.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +26,8 @@ import com.miaosha.vo.GoodsVo;
 @RequestMapping("miaosha")
 public class MiaoshaController {
 	
+	private static final Logger LOG = LoggerFactory.getLogger(MiaoshaController.class);
+	
 	@Autowired
 	private GoodsService goodsService;
 	@Autowired
@@ -31,9 +35,27 @@ public class MiaoshaController {
 	@Autowired
 	private MiaoshaService miaoshaService;
 	
+	/**
+	 * QPS:
+	 * 
+	 * 模拟: 3000个用户 * 10次循环 = 30000个请求
+	 * 
+	 * 秒杀库存: 300个库存
+	 * 
+	 * 耗时: 
+	 * 
+	 * 
+	 * 
+	 * @param model
+	 * @param user
+	 * @param goodsId
+	 * @return
+	 */
 	@RequestMapping("do_miaosha")
 	public String doMiaosha(Model model, MiaoshaUserEntity user, 
 			@RequestParam("goodsId") Long goodsId) {
+		
+		LOG.info("====================进入秒杀========================");
 		
 		if (user == null) {	// 未登录，跳登录页
 			return "/login";

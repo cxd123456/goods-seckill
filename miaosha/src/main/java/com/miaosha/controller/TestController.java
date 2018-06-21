@@ -1,6 +1,11 @@
 package com.miaosha.controller;
 
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.miaosha.common.CodeMsg;
 import com.miaosha.common.Result;
+import com.miaosha.config.redis.MiaoshaUserKey;
 import com.miaosha.config.redis.RedisService;
 import com.miaosha.config.redis.UserKey;
 import com.miaosha.entity.User;
@@ -17,14 +23,23 @@ import com.miaosha.service.UserService;
 @RequestMapping("/test")
 public class TestController {
 	
+	private static final Logger LOG = LoggerFactory.getLogger(MiaoshaController.class);
+	
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private RedisService redisService;
+	@Autowired
+	private RedisTemplate<Object, Object> redisTemplate;
 	
 	@RequestMapping("/success")
 	@ResponseBody
-	public Result<String> success() {
+	public Result<String> success(String id) {
+		LOG.info("****id = " + id + "****");
+		
+//		redisService.set(MiaoshaUserKey.token, id, id);
+		redisTemplate.opsForValue().set(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+		
 		return Result.success("ok");
 	}
 	

@@ -46,7 +46,7 @@ public class LoginController {
 	 */
 	@PostMapping("do_login")
 	@ResponseBody
-	public Result<Boolean> doLogin(@Valid LoginVo loginVo, HttpServletResponse response) {
+	public Result<String> doLogin(@Valid LoginVo loginVo, HttpServletResponse response) {
 		LOG.info(loginVo.toString());
 		return miaoshaUserService.login(loginVo, response);
 	}

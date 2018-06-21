@@ -4,14 +4,19 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.miaosha.entity.MiaoshaUserEntity;
 import com.miaosha.service.GoodsService;
+import com.miaosha.service.MiaoshaUserService;
+import com.miaosha.service.impl.MiaoshaUserServiceImpl;
 import com.miaosha.vo.GoodsVo;
 
 /**
@@ -25,9 +30,24 @@ public class GoodsController {
 
 	@Autowired
 	private GoodsService goodsService;
-
+	@Autowired
+	private MiaoshaUserService miaoshaUserService;
+	
+	
 	/**
 	 * 商品列表展示
+	 * 
+	 * QPS: 500
+	 * 
+	 * 模拟：5000个并发 * 10次循环 = 50000个请求
+	 * 
+	 * 耗时：1分40秒
+	 * 
+	 * 分析：在并发访问过程中，数据库服务器CPU占用率达到了95%，负载最高到了3(mysql装在单核cpu的虚拟机上，内存1GB)，
+	 * 可见，并发访问中，造成QPS低的瓶颈在数据库。
+	 * 
+	 * 关于负载介绍: https://zhidao.baidu.com/question/186962244.html
+	 * 
 	 * @param model
 	 * @param response
 	 * @param miaoshaUserEntity
@@ -35,30 +55,30 @@ public class GoodsController {
 	 */
 	@RequestMapping("to_list")
 	public String toList(Model model, HttpServletResponse response,
-//			@CookieValue(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String cookieToken,
-//			@RequestParam(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String paramToken,
-			MiaoshaUserEntity miaoshaUserEntity
+			@CookieValue(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String cookieToken,
+			@RequestParam(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String paramToken
+//			MiaoshaUserEntity miaoshaUserEntity
 			) {
 
-//		String token = null;
-//
-//		if (StringUtils.isEmpty(paramToken)) {
-//			if (!StringUtils.isEmpty(cookieToken)) {
-//				token = cookieToken;
-//			}
-//		} else {
-//			token = paramToken;
-//		}
-//		
-//		if (StringUtils.isEmpty(token)) {
-//			return "/login";
-//		}
-//
-//		MiaoshaUserEntity miaoshaUserEntity = miaoshaUserService.getByToken(token, response);
+		String token = null;
 
-//		if (miaoshaUserEntity == null) {
-//			return "/login";
-//		}
+		if (StringUtils.isEmpty(paramToken)) {
+			if (!StringUtils.isEmpty(cookieToken)) {
+				token = cookieToken;
+			}
+		} else {
+			token = paramToken;
+		}
+//		
+		if (StringUtils.isEmpty(token)) {
+			return "/login";
+		}
+
+		MiaoshaUserEntity miaoshaUserEntity = miaoshaUserService.getByToken(token, response);
+
+		if (miaoshaUserEntity == null) {
+			return "/login";
+		}
 //
 //		model.addAttribute("user", miaoshaUserEntity);
 		

@@ -8,7 +8,7 @@ import com.miaosha.vo.LoginVo;
 
 public interface MiaoshaUserService {
 
-	Result<Boolean> login(LoginVo loginVo, HttpServletResponse response);
+	Result<String> login(LoginVo loginVo, HttpServletResponse response);
 	
 	MiaoshaUserEntity getByToken(String token, HttpServletResponse response);
 }

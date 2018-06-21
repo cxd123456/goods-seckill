@@ -18,6 +18,7 @@ import com.miaosha.entity.MiaoshaUserEntity;
 import com.miaosha.exceptioin.GlobalException;
 import com.miaosha.mapper.MiaoshaUserEntityMapper;
 import com.miaosha.service.MiaoshaUserService;
+import com.miaosha.utils.MD5Util;
 import com.miaosha.vo.LoginVo;
 
 @Service
@@ -31,13 +32,13 @@ public class MiaoshaUserServiceImpl implements MiaoshaUserService {
 	private RedisService redisService;
 
 	@Override
-	public Result<Boolean> login(LoginVo loginVo, HttpServletResponse response) {
+	public Result<String> login(LoginVo loginVo, HttpServletResponse response) {
 		MiaoshaUserEntity user = miaoshaUserEntityMapper.selectByPrimaryKey(Long.valueOf(loginVo.getMobile()));
 		if (user == null) {
 			throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
 		}
 
-		String md5DigestAsHex = DigestUtils.md5DigestAsHex((loginVo.getPassword() + user.getSalt()).getBytes());
+		String md5DigestAsHex = MD5Util.formPassToDBPass(loginVo.getPassword(), user.getSalt());
 		if (!md5DigestAsHex.equals(user.getPassword())) {
 			throw new GlobalException(CodeMsg.PASSWORD_ERROR);
 		}
@@ -53,7 +54,7 @@ public class MiaoshaUserServiceImpl implements MiaoshaUserService {
 //		response.addCookie(cookie);
 		addCookie(token, user, response);
 
-		return Result.success(true);
+		return Result.success(token);
 	}
 
 	@Override
