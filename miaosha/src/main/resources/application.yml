@@ -1,5 +1,11 @@
+
+# 内置tomcat配置，参考https://blog.csdn.net/mn960mn/article/details/51306140
 server: 
-  port: 8080
+  port: 8081
+  tomcat: 
+    max-threads: 2000
+  
+  
 spring: 
 # thymeleaf
   thymeleaf: 

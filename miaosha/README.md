@@ -37,3 +37,9 @@ mysql： 装在1核、1GB内存的虚拟机上
 ![1000的并发下，吞吐量](pictures/jmeter-picture2.jpg)
 
 2. 在10000的并发下，吞吐量为100/秒 左右，如下图
+
+### 高并发系统下，redis配置问题
+
+要注意redis pool的timeout一定要配置，且要适当配置时间长一点，否则在大量请求获取redis连接时，因为短时间连不到redis而报错
+
+

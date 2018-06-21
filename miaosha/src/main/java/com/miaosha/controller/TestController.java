@@ -1,5 +1,6 @@
 package com.miaosha.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -17,7 +18,9 @@ import com.miaosha.config.redis.MiaoshaUserKey;
 import com.miaosha.config.redis.RedisService;
 import com.miaosha.config.redis.UserKey;
 import com.miaosha.entity.User;
+import com.miaosha.service.GoodsService;
 import com.miaosha.service.UserService;
+import com.miaosha.vo.GoodsVo;
 
 @Controller
 @RequestMapping("/test")
@@ -30,6 +33,8 @@ public class TestController {
 	@Autowired
 	private RedisService redisService;
 	@Autowired
+	private GoodsService goodsService;
+	@Autowired
 	private RedisTemplate<Object, Object> redisTemplate;
 	
 	@RequestMapping("/success")
@@ -38,7 +43,8 @@ public class TestController {
 		LOG.info("****id = " + id + "****");
 		
 //		redisService.set(MiaoshaUserKey.token, id, id);
-		redisTemplate.opsForValue().set(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+//		redisTemplate.opsForValue().set(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+		List<GoodsVo> list = goodsService.selectGoodsVoList();
 		
 		return Result.success("ok");
 	}
