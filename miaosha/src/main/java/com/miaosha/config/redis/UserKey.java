@@ -9,8 +9,4 @@ public class UserKey extends BaseRedisKeyPrefix{
 		super(expireSeconds, prefix);
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(UserKey.getById.getPrefix());
-	}
-
 }

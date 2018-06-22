@@ -1,22 +1,25 @@
 package com.miaosha.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+import com.miaosha.common.Result;
+import com.miaosha.config.redis.GoodsKey;
+import com.miaosha.config.redis.RedisService;
 import com.miaosha.entity.MiaoshaUserEntity;
 import com.miaosha.service.GoodsService;
 import com.miaosha.service.MiaoshaUserService;
-import com.miaosha.service.impl.MiaoshaUserServiceImpl;
 import com.miaosha.vo.GoodsVo;
 
 /**
@@ -27,12 +30,15 @@ import com.miaosha.vo.GoodsVo;
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(GoodsController.class);
 
 	@Autowired
 	private GoodsService goodsService;
 	@Autowired
 	private MiaoshaUserService miaoshaUserService;
-	
+	@Autowired
+	private RedisService redisService;
 	
 	/**
 	 * 商品列表展示
@@ -54,41 +60,78 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("to_list")
-	public String toList(Model model, HttpServletResponse response,
-			@CookieValue(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String cookieToken,
-			@RequestParam(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String paramToken
+	@ResponseBody
+	public Result<List<GoodsVo>> toList(
+//			Model model, HttpServletResponse response,
+//			@CookieValue(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String cookieToken,
+//			@RequestParam(value = MiaoshaUserServiceImpl.COOKIE_NAME_TOKEN, required = false) String paramToken
 //			MiaoshaUserEntity miaoshaUserEntity
 			) {
 
-		String token = null;
-
-		if (StringUtils.isEmpty(paramToken)) {
-			if (!StringUtils.isEmpty(cookieToken)) {
-				token = cookieToken;
-			}
-		} else {
-			token = paramToken;
-		}
-//		
-		if (StringUtils.isEmpty(token)) {
-			return "/login";
-		}
-
-		MiaoshaUserEntity miaoshaUserEntity = miaoshaUserService.getByToken(token, response);
-
-		if (miaoshaUserEntity == null) {
-			return "/login";
-		}
+//		String token = null;
+//
+//		if (StringUtils.isEmpty(paramToken)) {
+//			if (!StringUtils.isEmpty(cookieToken)) {
+//				token = cookieToken;
+//			}
+//		} else {
+//			token = paramToken;
+//		}
+////		
+//		if (StringUtils.isEmpty(token)) {
+//			return "/login";
+//		}
+//
+//		MiaoshaUserEntity miaoshaUserEntity = miaoshaUserService.getByToken(token, response);
+//
+//		if (miaoshaUserEntity == null) {
+//			return "/login";
+//		}
 //
 //		model.addAttribute("user", miaoshaUserEntity);
 		
-		// 查询商品列表
+		// 3. 缓存中没有，从数据库拿，然后再放到缓存中
+		List<GoodsVo> list = goodsService.selectGoodsVoList();
+		return Result.success(list);
+	}
+	
+	/**
+	 * 商品列表展示
+	 * 
+	 * 
+	 * 
+	 * @return
+	 */
+	@RequestMapping("to_list_redis")
+	@ResponseBody
+	public Result<List<GoodsVo>> toListRedis() {
+		// redis缓存商品列表
+		// 1. 去redis取缓存
+		List<GoodsVo> redisGoodsList = redisService.get(GoodsKey.getGoodsList, "toList", List.class);
+		
+		// 2. 缓存有，直接取出来，返回
+		if (redisGoodsList != null) {
+			LOG.info("=====从redis缓存中取数据=====");
+			return Result.success(redisGoodsList);
+		}
+		
+		LOG.info("=====从mysql数据库中取数据=====");
+		// 3. 缓存中没有，从数据库拿，然后再放到缓存中
 		List<GoodsVo> list = goodsService.selectGoodsVoList();
 		
-		model.addAttribute("goodsList", list);
+		if (list == null) {
+			LOG.info("=====mysql数据库中无数据=====");
+			return Result.success(null);
+		}
+		
+		LOG.info("=====mysql数据库中数据放到redis缓存中=====");
+		// 放到redis缓存
+		redisService.set(GoodsKey.getGoodsList, "toList", list);
 
-		return "goods_list";
+		return Result.success(list);
 	}
+	
+	
 	
 	/**
 	 * 商品详情
@@ -125,6 +168,29 @@ public class GoodsController {
 		model.addAttribute("miaoshaStatus", miaoshaStatus);
 		model.addAttribute("remainSeconds", remainSeconds);
 		return "goods_detail";
+	}
+	
+	public static void main(String[] args) {
+		List<GoodsVo> list = new ArrayList<>();
+		
+		GoodsVo gv = new GoodsVo();
+		gv.setId(1L);
+		gv.setGoods_name("电脑1");
+		
+		GoodsVo gv2 = new GoodsVo();
+		gv2.setId(2L);
+		gv2.setGoods_name("电脑2");
+		list.add(gv);
+		list.add(gv2);
+		
+		String jsonString = JSON.toJSONString(list);
+		
+		System.out.println(jsonString);
+		
+		List<GoodsVo> parseObject = JSON.parseObject(jsonString, List.class);
+		
+		System.out.println(parseObject);
+		
 	}
 	
 

@@ -44,7 +44,7 @@ spring:
     host: 192.168.25.111
     port: 6379
     password: 
-    timeout: 100000 ## 关键
+    timeout: 500000 ## 关键
     pool:
      max-idle: 500
      min-idle: 50
