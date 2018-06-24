@@ -6,6 +6,7 @@ public class MiaoshaUserKey extends BaseRedisKeyPrefix{
 	public static final int TOKEN_EXPIRE = 2 * 24 * 60 * 60;
 	
 	public static final MiaoshaUserKey token = new MiaoshaUserKey(TOKEN_EXPIRE, "tx");
+	public static final MiaoshaUserKey getById = new MiaoshaUserKey(0, "id");
 	
 	public MiaoshaUserKey(int expireSeconds, String prefix) {
 		super(expireSeconds, prefix);

@@ -84,4 +84,20 @@ public class MiaoshaUserServiceImpl implements MiaoshaUserService {
 		response.addCookie(cookie);
 	}
 
+	@Override
+	public MiaoshaUserEntity getById(Long id) {
+		// 取缓存
+		MiaoshaUserEntity redisUser = redisService.get(MiaoshaUserKey.getById, id.toString(), MiaoshaUserEntity.class);
+		if (null != redisUser) {
+			return redisUser;
+		}
+		
+		// 取数据库
+		MiaoshaUserEntity dbUser = miaoshaUserEntityMapper.selectByPrimaryKey(id);
+		if (null != dbUser) {
+			redisService.set(MiaoshaUserKey.getById, id.toString(), dbUser);
+		}
+		return dbUser;
+	}
+	
 }

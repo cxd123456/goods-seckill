@@ -11,4 +11,6 @@ public interface MiaoshaUserService {
 	Result<String> login(LoginVo loginVo, HttpServletResponse response);
 	
 	MiaoshaUserEntity getByToken(String token, HttpServletResponse response);
+	
+	MiaoshaUserEntity getById(Long id);
 }

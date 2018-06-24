@@ -78,7 +78,7 @@ public class RedisService {
 		if (prefix.expireSeconds() <= 0) {
 			redisTemplate.opsForValue().set(prefix.getPrefix() + key, value);
 		} else {
-			redisTemplate.opsForValue().set(key, value, prefix.expireSeconds() * 1000, TimeUnit.MILLISECONDS);
+			redisTemplate.opsForValue().set(prefix.getPrefix() + key, value, prefix.expireSeconds() * 1000, TimeUnit.MILLISECONDS);
 		}
 		return true;
 	}

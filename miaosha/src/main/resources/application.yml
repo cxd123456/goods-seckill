@@ -1,7 +1,7 @@
 
 # 内置tomcat配置，参考https://blog.csdn.net/mn960mn/article/details/51306140
 server: 
-  port: 8081
+  port: 8080
   tomcat: 
     max-threads: 2000
   
@@ -41,7 +41,7 @@ spring:
     maxOpenPreparedStatements: 20
 # redis config
   redis:
-    host: 192.168.25.111
+    host: 192.168.25.201
     port: 6379
     password: 
     timeout: 500000 ## 关键
