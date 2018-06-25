@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.miaosha.common.CodeMsg;
 import com.miaosha.entity.MiaoshaGoodsEntity;
+import com.miaosha.exceptioin.GlobalException;
 import com.miaosha.mapper.GoodsEntityMapper;
 import com.miaosha.mapper.MiaoshaGoodsEntityMapper;
 import com.miaosha.service.GoodsService;
@@ -33,7 +35,9 @@ public class GoodsServiceImpl implements GoodsService {
 	public void reduceStock(GoodsVo goodsVo) {
 		MiaoshaGoodsEntity miaoshaGoodsEntity = new MiaoshaGoodsEntity();
 		miaoshaGoodsEntity.setGoods_id(goodsVo.getId());
-		miaoshaGoodsEntityMapper.reduceStock(miaoshaGoodsEntity);
+		if (miaoshaGoodsEntityMapper.reduceStock(miaoshaGoodsEntity) <= 0) {
+			throw new GlobalException(CodeMsg.MIAO_SHA_OVER);
+		}
 	}
 	
 	

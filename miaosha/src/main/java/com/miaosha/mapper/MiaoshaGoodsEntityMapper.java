@@ -17,6 +17,6 @@ public interface MiaoshaGoodsEntityMapper {
 
     int updateByPrimaryKey(MiaoshaGoodsEntity record);
 
-    @Update("UPDATE miaosha_goods SET stock_count = stock_count -1 WHERE goods_id = #{goods_id}")
+    @Update("UPDATE miaosha_goods SET stock_count = stock_count -1 WHERE goods_id = #{goods_id} AND stock_count > 0")
 	int reduceStock(MiaoshaGoodsEntity miaoshaGoodsEntity);
 }

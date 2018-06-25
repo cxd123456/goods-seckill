@@ -6,6 +6,6 @@ import com.miaosha.vo.GoodsVo;
 
 public interface MiaoshaService {
 
-	OrderInfoEntity miaosha(MiaoshaUserEntity user, GoodsVo goodsVo);
+	OrderInfoEntity miaosha(Long userId, GoodsVo goodsVo);
 
 }

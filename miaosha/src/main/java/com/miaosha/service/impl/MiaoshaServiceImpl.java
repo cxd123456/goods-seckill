@@ -26,13 +26,13 @@ public class MiaoshaServiceImpl implements MiaoshaService {
 
 	@Transactional
 	@Override
-	public OrderInfoEntity miaosha(MiaoshaUserEntity user, GoodsVo goodsVo) {
+	public OrderInfoEntity miaosha(Long userId, GoodsVo goodsVo) {
 		
 		// 1.减库存 
 		goodsService.reduceStock(goodsVo);
 		
 		// 2.生成订单 order_info, miaosha_order
-		return orderService.createOrder(user, goodsVo);
+		return orderService.createOrder(userId, goodsVo);
 	}
 
 }

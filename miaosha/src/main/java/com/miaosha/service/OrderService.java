@@ -9,6 +9,6 @@ public interface OrderService {
 
 	MiaoshaOrderEntity getMiaoshaOrderByUserIdGoodsId(Long userId, Long goodsId);
 
-	OrderInfoEntity createOrder(MiaoshaUserEntity user, GoodsVo goodsVo);
+	OrderInfoEntity createOrder(Long userId, GoodsVo goodsVo);
 
 }
