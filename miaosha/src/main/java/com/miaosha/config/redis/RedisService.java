@@ -122,7 +122,7 @@ public class RedisService {
 //		}
 //	}
 
-	private <T> String beanToString(T obj) {
+	public static <T> String beanToString(T obj) {
 		if (obj == null) {
 			return null;
 		}
@@ -130,7 +130,7 @@ public class RedisService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T stringToBean(String value, Class<T> clazz) {
+	private static <T> T stringToBean(String value, Class<T> clazz) {
 		if (value == null || "".equals(value)) {
 			return null;
 		}
@@ -154,7 +154,7 @@ public class RedisService {
 	}
 
 	public static void main(String[] args) {
-		// System.out.println(JSON.toJSONString(1).getClass());
+//		 System.out.println(beanToString(new Integer("1")));
 		// System.out.println(JSON.parseArray("1", String.class));
 	}
 

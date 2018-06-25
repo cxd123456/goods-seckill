@@ -61,9 +61,29 @@ spring:
 #  poolMaxIdle: 500
 #  poolMaxWait: 500
 
+# rabbitmq
+  rabbitmq: 
+    host: 192.168.25.201
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener: 
+      concurrency: 10 # 消费者数量
+      max-concurrency: 10 # 消费者最大数量
+      prefetch: 1 # 消费者每次从队列中取几个消息
+      auto-startup: true # 启动时自动启动消费者
+      default-requeue-rejected: true # 消息消费失败后，重新进入消费队列中
+      retry:
+        enabled: true # 启用发布重试
+        initial-interval: 1000 # 1秒后重试
+        max-attempts: 3 # 传递消息的最大尝试次数
+        max-interval: 10000 # 尝试的最大时间间隔
+        multiplier: 1.0 # 应用于先前传递重试时间间隔的乘数
+      
+
 # mybatis
 mybatis:
   mapper-locations: classpath:mapping/*.xml
-
 
 

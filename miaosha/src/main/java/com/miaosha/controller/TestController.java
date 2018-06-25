@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.miaosha.common.CodeMsg;
 import com.miaosha.common.Result;
+import com.miaosha.config.rabbitmq.MQSender;
 import com.miaosha.config.redis.MiaoshaUserKey;
 import com.miaosha.config.redis.RedisService;
 import com.miaosha.config.redis.UserKey;
@@ -36,6 +37,8 @@ public class TestController {
 	private GoodsService goodsService;
 	@Autowired
 	private RedisTemplate<Object, Object> redisTemplate;
+	@Autowired
+	private MQSender sender;
 	
 	@RequestMapping("/success")
 	@ResponseBody
@@ -85,6 +88,14 @@ public class TestController {
 		redisService.incr(UserKey.getById, "2");
 		System.out.println(redisService.get(UserKey.getById, "2", String.class));
 		return Result.success(redisService.get(UserKey.getById, "1", User.class));
+	}
+	
+	@RequestMapping("/mq")
+	@ResponseBody
+	public Result<String> mq() {
+		String message = "hello, rabbitmq";
+		sender.send(message);
+		return Result.success(message);
 	}
 
 }

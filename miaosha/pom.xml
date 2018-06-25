@@ -25,6 +25,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
+		<!-- thymeleaf -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -43,11 +44,15 @@
 			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>1.1.0</version>
 		</dependency>
-		<!-- <dependency> <groupId>redis.clients</groupId> <artifactId>jedis</artifactId> 
-			</dependency> -->
+		<!-- redis -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<!-- 消息队列标准协议activemq和rabbitmq都实现了这个协议 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
