@@ -21,11 +21,17 @@ public class MQSender {
 	@Autowired
 	private AmqpTemplate amqpTemplate;
 	
-	public void send(Object message) {
-		if (message == null) 
-			return;
+//	public void send(Object message) {
+//		if (message == null) 
+//			return;
+//		LOG.info("----send message: " + message + "----");
+//		amqpTemplate.convertAndSend(MQConfig.QUEUE, JSON.toJSONString(message));	// arg1 队列名称
+//	}
+
+	public void sendMiaoshaMessage(MiaoshaMessage message) {
 		LOG.info("----send message: " + message + "----");
-		amqpTemplate.convertAndSend(MQConfig.QUEUE, JSON.toJSONString(message));	// arg1 队列名称
+		if (message == null) return;
+		amqpTemplate.convertAndSend(MQConfig.MIAOSHA_QUEUE, JSON.toJSONString(message));
 	}
 	
 	

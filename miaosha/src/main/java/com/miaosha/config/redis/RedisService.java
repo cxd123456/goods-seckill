@@ -112,15 +112,10 @@ public class RedisService {
 	 * @param key
 	 * @return
 	 */
-//	public Boolean exists(RedisKeyPrefix prefix, String key) {
-//		Jedis jedis = null;
-//		try {
-//			jedis = jedisPool().getResource();
-//			return jedis.exists(prefix.getPrefix() + key);
-//		} finally {
-//			returnToPool(jedis);
-//		}
-//	}
+	
+	public Boolean exists(RedisKeyPrefix prefix, String key) {
+		return redisTemplate.hasKey(prefix.getPrefix() + key);
+	}
 
 	public static <T> String beanToString(T obj) {
 		if (obj == null) {
@@ -130,7 +125,7 @@ public class RedisService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> T stringToBean(String value, Class<T> clazz) {
+	public static <T> T stringToBean(String value, Class<T> clazz) {
 		if (value == null || "".equals(value)) {
 			return null;
 		}

@@ -93,9 +93,7 @@ public class TestController {
 	@RequestMapping("/mq")
 	@ResponseBody
 	public Result<String> mq() {
-		String message = "hello, rabbitmq";
-		sender.send(message);
-		return Result.success(message);
+		return Result.success(null);
 	}
 
 }

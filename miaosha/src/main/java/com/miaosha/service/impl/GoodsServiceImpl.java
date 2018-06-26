@@ -32,11 +32,13 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public void reduceStock(GoodsVo goodsVo) {
+	public Boolean reduceStock(GoodsVo goodsVo) {
 		MiaoshaGoodsEntity miaoshaGoodsEntity = new MiaoshaGoodsEntity();
 		miaoshaGoodsEntity.setGoods_id(goodsVo.getId());
 		if (miaoshaGoodsEntityMapper.reduceStock(miaoshaGoodsEntity) <= 0) {
-			throw new GlobalException(CodeMsg.MIAO_SHA_OVER);
+			return false;
+		} else {
+			return true;
 		}
 	}
 	

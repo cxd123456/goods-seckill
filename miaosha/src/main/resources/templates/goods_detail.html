@@ -45,10 +45,8 @@
         	<span th:if="${miaoshaStatus eq 2}">秒杀已结束</span>
         </td>
         <td>
-        	<form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
-        		<button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
-        		<input type="hidden" name="goodsId" th:value="${goods.id}" />
-        	</form>
+       		<button class="btn btn-primary btn-block" type="button" onclick="doMiaosha()" id="buyButton">立即秒杀</button>
+       		<input type="hidden" name="goodsId" th:value="${goods.id}" />
         </td>
      </tr>
      <tr>  
@@ -70,6 +68,62 @@
 $(function(){
 	countDown();
 });
+
+function doMiaosha(){
+	
+	$.ajax({
+		url: "/miaosha/do_miaosha",
+		type: "POST",
+		data: {},
+		success: function(data) {
+			if (data.code == 0) {
+				getMiaoshaResult();
+			} else {
+				layer.msg(data.msg);
+			}
+		},
+		error: function(){
+			layer.msg("客户端请求有误");
+		}
+		
+	});
+	
+}
+
+function getMiaoshaResult(){
+	g_showLoading();
+	$.ajax({
+		url: "/miaosha/result",
+		type: "GET",
+		data: {},
+		success: function(data) {
+			if (data.code == 0) {
+				var result = data.data;
+				if (0 > result) {
+					layer.msg("对不起秒杀失败");
+				} else if (result == 0) {	// 继续轮询
+					setTimeout(function() {
+						getMiaoshaResult();
+					}, 50);
+				} else {
+					layer.confirm("恭喜你，秒杀成功，查看订单？", {btn:["确定", "取消"]}, 
+							function() {
+								layer.msg("跳转订单列表");
+							}, 
+							function() {
+								layer.closeAll();
+							});
+				}
+			} else {
+				layer.msg(data.msg);
+			}
+		},
+		error: function(){
+			layer.msg("客户端请求有误");
+		}
+		
+	});
+}
 
 function countDown(){
 	var remainSeconds = $("#remainSeconds").val();
