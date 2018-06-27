@@ -91,7 +91,7 @@ public class RedisService {
 	 * @return
 	 */
 	public Long incr(RedisKeyPrefix prefix, String key) {
-		return redisTemplate.opsForValue().increment(key, 1);
+		return redisTemplate.opsForValue().increment(prefix.getPrefix() + key, 1);
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class RedisService {
 	 * @return
 	 */
 	public Long decr(RedisKeyPrefix prefix, String key) {
-		return redisTemplate.opsForValue().increment(key, -1);
+		return redisTemplate.opsForValue().increment(prefix.getPrefix() + key, -1);
 	}
 
 	/**
