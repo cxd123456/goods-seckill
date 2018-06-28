@@ -29,7 +29,7 @@ import com.miaosha.vo.GoodsVo;
 
 /**
  * 秒杀controller
- * 
+ *
  * @创建时间：2018年6月20日
  */
 @Controller
@@ -41,9 +41,9 @@ public class MiaoshaController {
 	private Map<Long, Boolean> localOverMap = new HashMap<>(); // 本地存储是否秒杀完毕的状态，要比redis更快
 
 	@Autowired
-	private MiaoshaService miaoshaService;
-	@Autowired
 	private GoodsService goodsService;
+	@Autowired
+	private MiaoshaService miaoshaService;
 	@Autowired
 	private OrderService orderService;
 	@Autowired
@@ -51,26 +51,17 @@ public class MiaoshaController {
 	@Autowired
 	private MQSender sender;
 
-	@PostConstruct
-	public void setGoodsStockToRedis() {
-		List<GoodsVo> goodsList = goodsService.selectGoodsVoList();
-		for (GoodsVo goods : goodsList) {
-			redisService.set(GoodsKey.getMiaoshaGoodsStock, goods.getId().toString(), goods.getStock_count());
-			localOverMap.put(goods.getId(), false); //
-		}
-	}
-
 	/**
 	 * 未优化的秒杀接口
-	 * 
+	 *
 	 * 模拟: 1000个用户 * 10次循环 = 10000个请求
-	 * 
+	 *
 	 * 库存：10个
-	 * 
+	 *
 	 * 耗时：26秒
-	 * 
+	 *
 	 * QPS：最大到了380
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping("do_seckill")
@@ -93,14 +84,23 @@ public class MiaoshaController {
 			return Result.error(CodeMsg.REPEATE_MIAOSHA);
 		}
 
-		// 上面判断库存和判断是否秒杀过无法完全解决并发问题，真正解决并发问题是下面两步操作 
+		// 上面判断库存和判断是否秒杀过无法完全解决并发问题，真正解决并发问题是下面两步操作
 		// 1. 减库存使用mysql排它锁，保证不会卖超
-		// 2. 生成秒杀订单使用mysql唯一索引，保证秒杀过的用户无法再次秒杀 
+		// 2. 生成秒杀订单使用mysql唯一索引，保证秒杀过的用户无法再次秒杀
 		// 可以秒杀 1.减库存 2.生成订单 3.写入秒杀订单
 		OrderInfoEntity orderInfoEntity = miaoshaService.miaosha(userId, goodsVo);
 
 		return Result.success(0);
 
+	}
+
+	@PostConstruct
+	public void setGoodsStockToRedis() {
+		List<GoodsVo> goodsList = goodsService.selectGoodsVoList();
+		for (GoodsVo goods : goodsList) {
+			redisService.set(GoodsKey.getMiaoshaGoodsStock, goods.getId().toString(), goods.getStock_count());
+			localOverMap.put(goods.getId(), false); //
+		}
 	}
 
 	/**
