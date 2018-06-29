@@ -29,7 +29,7 @@ import com.miaosha.vo.GoodsVo;
 
 /**
  * 秒杀controller
- *
+ * 
  * @创建时间：2018年6月20日
  */
 @Controller
@@ -197,5 +197,6 @@ public class MiaoshaController {
     public static void main(String[] args) {
         System.out.println(IdWorker.getId());
     }
+
 
 }
