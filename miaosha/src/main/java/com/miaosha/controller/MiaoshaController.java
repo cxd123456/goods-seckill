@@ -1,15 +1,26 @@
 package com.miaosha.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
+import com.miaosha.config.redis.MiaoshaKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -117,20 +128,28 @@ public class MiaoshaController {
      * 可以看出，QPS提高了4倍，确实是对性能提升了太多
      * <p>
      * 秒杀接口优化核心思路：减少对数据库的访问
+     * 
+     * 秒杀地址隐藏, 思路是秒杀地址对外是不固定的, 每次都必须先请求获取秒杀地址
+     * 对于秒杀请求, 还需要校验地址的正确性
+     * 方式是@PathVariable, 地址传参
+     * 目的: 接口 防刷
      *
-     * @param model
-     * @param user
-     * @param goodsId
      * @return
      */
-    @RequestMapping("do_miaosha")
+    @RequestMapping("/{path}/do_miaosha")
     @ResponseBody
-    public Result<Integer> doMiaosha() {
+    public Result<Integer> doMiaosha(@PathVariable String path) {
 
         // ===============优化===============
 
         Long goodsId = 1L; // 模拟商品id
-        Long userId = IdWorker.getId(); // 模拟秒杀用户id
+        Long userId = 1011955828648882178L; // IdWorker.getId(); // 模拟秒杀用户id
+
+        // 验证Path, 秒杀地址校验
+        boolean check = miaoshaService.checkPath(path, userId, goodsId);
+        if (!check) {
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+        }
 
         // TODO 重要的优化点，内存标记
         // 判断内存标记是否秒杀结束，这要访问redis要快，减少redis访问
@@ -194,8 +213,35 @@ public class MiaoshaController {
         return Result.success(orderId);
     }
 
+    @RequestMapping("path")
+    @ResponseBody
+    public Result<String> getMiaoshaPath() {
+        Long goodsId = 1L;
+        Long userId = 1011955828648882178L;
+        String str = DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes());
+        redisService.set(MiaoshaKey.getMiaoshaPath,  userId + "_" + goodsId, str);
+        return Result.success(str);
+    }
+    
+    @RequestMapping("verifyCode")
+    @ResponseBody
+    public Result<String> verifyCode(HttpServletResponse response) throws Exception {
+    	Long goodsId = 1L;
+    	Long userId = 1011955828648882178L;
+    	
+    	BufferedImage image = miaoshaService.createMiaoshaVerfyCode(userId, goodsId);
+    	
+    	ServletOutputStream outputStream = response.getOutputStream();
+    	ImageIO.write(image, "JPEG", outputStream);
+    	outputStream.flush();
+    	outputStream.close();
+    	
+    	return null;
+    }
+    
+
     public static void main(String[] args) {
-        System.out.println(IdWorker.getId());
+
     }
 
 

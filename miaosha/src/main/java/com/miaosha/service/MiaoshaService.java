@@ -1,5 +1,7 @@
 package com.miaosha.service;
 
+import java.awt.image.BufferedImage;
+
 import com.miaosha.entity.OrderInfoEntity;
 import com.miaosha.vo.GoodsVo;
 
@@ -9,4 +11,7 @@ public interface MiaoshaService {
 
 	Long getMiaoshaResult(Long userId, Long goodsId);
 
+	boolean checkPath(String path, Long userId, Long goodsId);
+
+	BufferedImage createMiaoshaVerfyCode(Long userId, Long goodsId);
 }

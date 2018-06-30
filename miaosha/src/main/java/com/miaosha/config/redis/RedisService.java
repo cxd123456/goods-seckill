@@ -121,6 +121,9 @@ public class RedisService {
 		if (obj == null) {
 			return null;
 		}
+		if (obj instanceof String) {
+			return (String) obj;
+		}
 		return JSON.toJSONString(obj);
 	}
 
