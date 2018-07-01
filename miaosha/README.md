@@ -46,3 +46,9 @@ mysql： 装在1核、1GB内存的虚拟机上
 com.miaosha.config.web.WebConfig
 
 org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+
+### 基于注解的接口访问次数控制
+
+com.miaosha.config.annotation.AccessLimit
+
+com.miaosha.config.interceptor.AccessInterceptor

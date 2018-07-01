@@ -2,6 +2,7 @@ package com.miaosha.config.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.miaosha.common.CodeMsg;
+import com.miaosha.common.Result;
 import com.miaosha.config.annotation.AccessLimit;
 import com.miaosha.config.redis.AccessKey;
 import com.miaosha.config.redis.RedisService;
@@ -91,8 +92,9 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void render(HttpServletResponse response, CodeMsg sessionError) throws IOException {
+        response.setContentType("application/json");
         ServletOutputStream outputStream = response.getOutputStream();
-        String str = JSON.toJSONString(sessionError);
+        String str = JSON.toJSONString(Result.error(sessionError));
         outputStream.write(str.getBytes("UTF-8"));
         outputStream.flush();
         outputStream.close();
