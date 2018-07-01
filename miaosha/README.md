@@ -42,4 +42,7 @@ mysql： 装在1核、1GB内存的虚拟机上
 
 要注意redis pool的timeout一定要配置，且要适当配置时间长一点，否则在大量请求获取redis连接时，因为短时间连不到redis而报错
 
+### spring适配器模式的使用
+com.miaosha.config.web.WebConfig
 
+org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter

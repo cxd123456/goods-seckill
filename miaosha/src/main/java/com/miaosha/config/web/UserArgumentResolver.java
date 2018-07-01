@@ -17,7 +17,7 @@ import com.miaosha.entity.MiaoshaUserEntity;
 import com.miaosha.service.MiaoshaUserService;
 import com.miaosha.service.impl.MiaoshaUserServiceImpl;
 
-//@Component
+@Component
 public class UserArgumentResolver implements HandlerMethodArgumentResolver{
 	
 	@Autowired

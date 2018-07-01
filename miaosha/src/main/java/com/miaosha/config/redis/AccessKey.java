@@ -8,4 +8,9 @@ public class AccessKey extends BaseRedisKeyPrefix{
     public AccessKey(int expireSeconds, String prefix) {
         super(expireSeconds, prefix);
     }
+
+    public AccessKey withExpire(int expireSeconds){
+        this.setExpireSeconds(expireSeconds);
+        return this;
+    }
 }

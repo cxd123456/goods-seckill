@@ -232,16 +232,16 @@ public class MiaoshaController {
         Long userId = 1011955828648882178L;
 
         // 接口防刷, 访问接口次数限制
-        String uri = request.getRequestURI();
-        String key = uri + "_" + userId;
-        Integer count = redisService.get(AccessKey.ACCESS, key, Integer.class);
-        if (count == null) {
-            redisService.set(AccessKey.ACCESS, key, 1);
-        } else if (count < 5) {
-            redisService.incr(AccessKey.ACCESS, key);
-        } else {
-            return Result.error(CodeMsg.ACCESS_LIMIT);
-        }
+//        String uri = request.getRequestURI();
+//        String key = uri + "_" + userId;
+//        Integer count = redisService.get(AccessKey.ACCESS, key, Integer.class);
+//        if (count == null) {
+//            redisService.set(AccessKey.ACCESS, key, 1);
+//        } else if (count < 5) {
+//            redisService.incr(AccessKey.ACCESS, key);
+//        } else {
+//            return Result.error(CodeMsg.ACCESS_LIMIT);
+//        }
 
 
         boolean check = miaoshaService.checkVerifyCode(userId, goodsId, verifyCode);

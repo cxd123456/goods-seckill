@@ -1,7 +1,10 @@
 package com.miaosha.config.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.miaosha.common.CodeMsg;
 import com.miaosha.config.annotation.AccessLimit;
+import com.miaosha.config.redis.AccessKey;
+import com.miaosha.config.redis.RedisService;
 import com.miaosha.config.threadlocal.UserContext;
 import com.miaosha.entity.MiaoshaUserEntity;
 import com.miaosha.service.MiaoshaUserService;
@@ -20,12 +23,17 @@ import java.io.IOException;
 
 /**
  * 控制RequestMapping请求访问次数的拦截器
+ *
+ * 针对@AccessLimit注解
+ * @see com.miaosha.config.annotation.AccessLimit
  */
 @Component
 public class AccessInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private MiaoshaUserService miaoshaUserService;
+    @Autowired
+    private RedisService redisService;
 
     /**
      * 方法执行前
@@ -41,11 +49,12 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 
         if (handler instanceof HandlerMethod) {
 
+            // 根据request中token获取user
             MiaoshaUserEntity miaoshaUser = getUser(response, request);
-            UserContext.setUser(miaoshaUser);
+            UserContext.setUser(miaoshaUser);   // 将user放到本地线程ThreadLocal
 
-            HandlerMethod hm = (HandlerMethod)handler;
-            AccessLimit accessLimit = hm.getMethodAnnotation(AccessLimit.class);
+            HandlerMethod hm = (HandlerMethod)handler;  // 从handler中取请求的方法requestMapping信息
+            AccessLimit accessLimit = hm.getMethodAnnotation(AccessLimit.class);    // 取出AccessLimit注解
             if (accessLimit == null) {
                 return true;
             }
@@ -54,14 +63,27 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
             int maxCount = accessLimit.maxCount();
             boolean needLogin = accessLimit.needLogin();
 
+            String key = request.getRequestURI();
             if (needLogin) {
                 if (miaoshaUser == null) {
                     render(response, CodeMsg.SESSION_ERROR);
                     return false;
                 }
+                Long userId = miaoshaUser.getId();
+                key += "_" + userId;
+            } else {
+                // do nothing
             }
 
-
+            Integer count = redisService.get(AccessKey.ACCESS, key, Integer.class);
+            if (count == null) {
+                redisService.set(AccessKey.ACCESS.withExpire(seconds), key, 1);
+            } else if (count < maxCount) {
+                redisService.incr(AccessKey.ACCESS, key);
+            } else {
+                render(response, CodeMsg.ACCESS_LIMIT);
+                return false;
+            }
 
         }
 
@@ -70,7 +92,10 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 
     private void render(HttpServletResponse response, CodeMsg sessionError) throws IOException {
         ServletOutputStream outputStream = response.getOutputStream();
-//        outputStream.write();
+        String str = JSON.toJSONString(sessionError);
+        outputStream.write(str.getBytes("UTF-8"));
+        outputStream.flush();
+        outputStream.close();
     }
 
     private MiaoshaUserEntity getUser(HttpServletResponse response, HttpServletRequest request) {

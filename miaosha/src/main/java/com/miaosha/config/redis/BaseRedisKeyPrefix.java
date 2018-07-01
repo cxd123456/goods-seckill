@@ -22,4 +22,9 @@ public abstract class BaseRedisKeyPrefix implements RedisKeyPrefix{
 		return this.getClass().getSimpleName() + ":" + prefix + ":";
 	}
 
+	public void setExpireSeconds(int expireSeconds) {
+		this.expireSeconds = expireSeconds;
+	}
+
+
 }
