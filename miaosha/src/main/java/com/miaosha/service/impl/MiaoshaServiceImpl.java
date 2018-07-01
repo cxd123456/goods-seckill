@@ -118,6 +118,16 @@ public class MiaoshaServiceImpl implements MiaoshaService {
 		return image;
 	}
 
+	@Override
+	public boolean checkVerifyCode(Long userId, Long goodsId, Integer verifyCode) {
+		Integer redisVerifyCode = redisService.get(MiaoshaKey.getMiaoshaVerifyCode, userId + "," + goodsId, Integer.class);
+		if (redisVerifyCode == null || verifyCode == null || !redisVerifyCode.equals(verifyCode)) {
+            return false;
+        }
+        redisService.del(MiaoshaKey.getMiaoshaVerifyCode, userId + "," + goodsId);
+		return true;
+	}
+
 	private static int calc(String verifyCode) {
 		try {
 			ScriptEngineManager manager = new ScriptEngineManager();
@@ -147,14 +157,11 @@ public class MiaoshaServiceImpl implements MiaoshaService {
 		
 		return exp;
 	}
-	
-	
-	public static void main(String[] args) {
-		Random rdm = new Random();
-		String generateVerifyCode = generateVerifyCode(rdm);
-		System.out.println(generateVerifyCode);
-		int calc = calc(generateVerifyCode);
-		System.out.println(calc);
-	}
+
+    public static void main(String[] args) {
+	    Integer i = new Integer(1);
+        System.out.println(1 == i);
+    }
+
 
 }

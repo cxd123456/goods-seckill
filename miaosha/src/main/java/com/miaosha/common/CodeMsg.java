@@ -22,6 +22,7 @@ public class CodeMsg implements Serializable{
 	public static final CodeMsg SERVER_ERROR = new CodeMsg(500100, "服务端异常");
 	public static final CodeMsg BIND_ERROR = new CodeMsg(500101, "参数校验异常: %s");
 	public static final CodeMsg REQUEST_ILLEGAL = new CodeMsg(500102, "请求非法");
+	public static final CodeMsg ACCESS_LIMIT = new CodeMsg(500103, "访问太频繁");
 
 	// 登录模块	5002XX
 	public static final CodeMsg SESSION_ERROR = new CodeMsg(500210, "session不存在或已失效");

@@ -76,13 +76,14 @@ $(function(){
 });
 
 function getMiaoshaPath() {
-    var goodsId = 1;
+    // var goodsId = 1;
+    var verifyCode = $("#verifyCode").val();
     $.ajax({
         url: "/miaosha/path",
         type: "GET",
-        data: {},
+        data: {verifyCode: verifyCode},
         success: function(data) {
-            if (data.code == 0) {
+            if (data.code === 0) {
                 var path = data.data;
                 doMiaosha(path);
             } else {
@@ -104,7 +105,7 @@ function doMiaosha(path){
 		type: "POST",
 		data: {},
 		success: function(data) {
-			if (data.code == 0) {
+			if (data.code === 0) {
 				getMiaoshaResult();
 			} else {
 				layer.msg(data.msg);

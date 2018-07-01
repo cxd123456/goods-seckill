@@ -14,4 +14,6 @@ public interface MiaoshaService {
 	boolean checkPath(String path, Long userId, Long goodsId);
 
 	BufferedImage createMiaoshaVerfyCode(Long userId, Long goodsId);
+
+    boolean checkVerifyCode(Long userId, Long goodsId, Integer verifyCode);
 }

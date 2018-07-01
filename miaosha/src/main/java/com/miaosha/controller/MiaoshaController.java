@@ -12,8 +12,11 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.miaosha.config.annotation.AccessLimit;
+import com.miaosha.config.redis.AccessKey;
 import com.miaosha.config.redis.MiaoshaKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.miaosha.common.CodeMsg;
@@ -31,7 +35,6 @@ import com.miaosha.config.rabbitmq.MiaoshaMessage;
 import com.miaosha.config.redis.GoodsKey;
 import com.miaosha.config.redis.RedisService;
 import com.miaosha.entity.MiaoshaOrderEntity;
-import com.miaosha.entity.OrderInfoEntity;
 import com.miaosha.service.GoodsService;
 import com.miaosha.service.MiaoshaService;
 import com.miaosha.service.OrderService;
@@ -40,7 +43,7 @@ import com.miaosha.vo.GoodsVo;
 
 /**
  * 秒杀controller
- * 
+ *
  * @创建时间：2018年6月20日
  */
 @Controller
@@ -128,11 +131,11 @@ public class MiaoshaController {
      * 可以看出，QPS提高了4倍，确实是对性能提升了太多
      * <p>
      * 秒杀接口优化核心思路：减少对数据库的访问
-     * 
+     * <p>
      * 秒杀地址隐藏, 思路是秒杀地址对外是不固定的, 每次都必须先请求获取秒杀地址
      * 对于秒杀请求, 还需要校验地址的正确性
      * 方式是@PathVariable, 地址传参
-     * 目的: 接口 防刷
+     * 目的: 接口 隐藏 防刷
      *
      * @return
      */
@@ -200,6 +203,8 @@ public class MiaoshaController {
     }
 
     /**
+     * 秒杀结果查询接口
+     * <p>
      * 成功：orderId 失败：-1 排队中：0
      *
      * @return
@@ -213,36 +218,56 @@ public class MiaoshaController {
         return Result.success(orderId);
     }
 
+    /**
+     * 1. 判断图形验证码是否正确
+     * 2. 获取秒杀地址接口
+     *
+     * @return
+     */
+    @AccessLimit(seconds = 5, maxCount = 5, needLogin = true)
     @RequestMapping("path")
     @ResponseBody
-    public Result<String> getMiaoshaPath() {
+    public Result<String> getMiaoshaPath(HttpServletRequest request, @RequestParam(value = "verifyCode", required = false) Integer verifyCode) {
         Long goodsId = 1L;
         Long userId = 1011955828648882178L;
+
+        // 接口防刷, 访问接口次数限制
+        String uri = request.getRequestURI();
+        String key = uri + "_" + userId;
+        Integer count = redisService.get(AccessKey.ACCESS, key, Integer.class);
+        if (count == null) {
+            redisService.set(AccessKey.ACCESS, key, 1);
+        } else if (count < 5) {
+            redisService.incr(AccessKey.ACCESS, key);
+        } else {
+            return Result.error(CodeMsg.ACCESS_LIMIT);
+        }
+
+
+        boolean check = miaoshaService.checkVerifyCode(userId, goodsId, verifyCode);
+        if (!check) {
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+        }
+
         String str = DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes());
-        redisService.set(MiaoshaKey.getMiaoshaPath,  userId + "_" + goodsId, str);
+        redisService.set(MiaoshaKey.getMiaoshaPath, userId + "_" + goodsId, str);
         return Result.success(str);
     }
-    
+
     @RequestMapping("verifyCode")
     @ResponseBody
     public Result<String> verifyCode(HttpServletResponse response) throws Exception {
-    	Long goodsId = 1L;
-    	Long userId = 1011955828648882178L;
-    	
-    	BufferedImage image = miaoshaService.createMiaoshaVerfyCode(userId, goodsId);
-    	
-    	ServletOutputStream outputStream = response.getOutputStream();
-    	ImageIO.write(image, "JPEG", outputStream);
-    	outputStream.flush();
-    	outputStream.close();
-    	
-    	return null;
+        Long goodsId = 1L;
+        Long userId = 1011955828648882178L;
+
+        BufferedImage image = miaoshaService.createMiaoshaVerfyCode(userId, goodsId);
+
+        ServletOutputStream outputStream = response.getOutputStream();
+        ImageIO.write(image, "JPEG", outputStream);
+        outputStream.flush();
+        outputStream.close();
+
+        return null;
     }
-    
-
-    public static void main(String[] args) {
-
-    }
-
 
 }

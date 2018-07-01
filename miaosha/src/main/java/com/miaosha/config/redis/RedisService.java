@@ -117,6 +117,10 @@ public class RedisService {
 		return redisTemplate.hasKey(prefix.getPrefix() + key);
 	}
 
+	public void del(RedisKeyPrefix prefix, String key) {
+		redisTemplate.delete(prefix.getPrefix() + key);
+	}
+
 	public static <T> String beanToString(T obj) {
 		if (obj == null) {
 			return null;
